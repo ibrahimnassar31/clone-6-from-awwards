@@ -16,22 +16,25 @@ const logos = [
 const ClientLogos = () => {
   return (
     <section className="bg-background">
-      <div className="w-full flex-col flex items-center pt-10 pb-20 gap-10">
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-foreground font-medium text-base text-center leading-normal">
-            Industry leaders trust Planhat to grow their revenue
-          </p>
-        </div>
-        <div className="flex flex-wrap justify-center items-center content-center gap-y-12 gap-x-10 max-w-[960px] w-full px-6 md:px-0">
+      <div className="w-full flex flex-col items-center pt-10 pb-20 gap-10">
+        <p className="text-foreground font-medium text-base text-center leading-normal">
+          Industry leaders trust Planhat to grow their revenue
+        </p>
+
+        <div className="flex flex-wrap justify-center items-center content-center gap-y-12 gap-x-12 max-w-[1120px] w-full px-6 md:px-0">
           {logos.map((logo, index) => (
-            <div key={index} className="flex justify-center items-center basis-32 shrink-0 h-[34px]">
+            <div
+              key={index}
+              className="flex justify-center items-center basis-40 sm:basis-44 md:basis-52 lg:basis-56 shrink-0 h-[44px] sm:h-[52px] md:h-[60px]"
+            >
               <div className="relative w-full h-full">
                 <Image
                   src={logo.src}
-                  alt=""
+                  alt={logo.name}
                   fill
-                  className="object-contain filter grayscale"
-                  sizes="128px"
+                  className="object-contain grayscale"
+                  sizes="(max-width: 640px) 160px, (max-width: 1024px) 200px, 224px"
+                  priority={index < 6}
                 />
               </div>
             </div>
