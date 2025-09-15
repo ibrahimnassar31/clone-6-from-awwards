@@ -11,7 +11,6 @@ import ScalableFoundation from '@/components/sections/scalable-foundation';
 import IndustrySolutions from '@/components/sections/industry-solutions';
 import ImpactStatsSection from '@/components/sections/impact-stats';
 import SystemOfAction from '@/components/sections/system-of-action';
-import NewsletterSignup from '@/components/sections/newsletter-signup';
 import Footer from '@/components/sections/footer';
 
 export default function HomePage() {
@@ -44,8 +43,6 @@ export default function HomePage() {
       <ImpactStatsSection />
       
       <SystemOfAction />
-      
-      <NewsletterSignup />
       
       <Footer />
       

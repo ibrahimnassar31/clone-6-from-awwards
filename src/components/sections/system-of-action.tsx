@@ -1,13 +1,216 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const SystemOfAction = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const textContainerRef = useRef<HTMLDivElement | null>(null);
+  const imageContainerRef = useRef<HTMLDivElement | null>(null);
+  const mainImageRef = useRef<HTMLImageElement | null>(null);
+  const secondaryImageRef = useRef<HTMLImageElement | null>(null);
+  const demoButtonRef = useRef<HTMLAnchorElement | null>(null);
+  const reviewButtonRef = useRef<HTMLAnchorElement | null>(null);
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      const section = sectionRef.current;
+      const textContainer = textContainerRef.current;
+      const imageContainer = imageContainerRef.current;
+      const mainImage = mainImageRef.current;
+      const secondaryImage = secondaryImageRef.current;
+      const demoButton = demoButtonRef.current;
+      const reviewButton = reviewButtonRef.current;
+      if (!section || !textContainer || !imageContainer || !mainImage || !secondaryImage || !demoButton || !reviewButton) return;
+
+      const heading = textContainer.querySelector("h3");
+      const paragraph = textContainer.querySelector("p");
+      if (!heading || !paragraph) return;
+
+      const headingSplit = new SplitText(heading, { type: "words" });
+      const paragraphSplit = new SplitText(paragraph, { type: "lines" });
+
+      gsap.fromTo(
+        textContainer,
+        { opacity: 0, scale: 0.95, y: 30 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      gsap.from(headingSplit.words, {
+        opacity: 0,
+        y: 15,
+        duration: 0.6,
+        ease: "power2.out",
+        stagger: { amount: 0.3 },
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      gsap.from(paragraphSplit.lines, {
+        opacity: 0,
+        y: 20,
+        duration: 0.7,
+        ease: "power2.out",
+        stagger: { amount: 0.2 },
+        delay: 0.3,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      gsap.fromTo(
+        mainImage,
+        { y: 50, scale: 1.1 },
+        {
+          y: -50,
+          scale: 1,
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: imageContainer,
+            start: "top 90%",
+            end: "bottom 20%",
+            scrub: 1,
+          },
+        }
+      );
+
+      gsap.fromTo(
+        secondaryImage,
+        { y: 30, scale: 1.05 },
+        {
+          y: -30,
+          scale: 1,
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: imageContainer,
+            start: "top 90%",
+            end: "bottom 20%",
+            scrub: 1,
+          },
+        }
+      );
+
+      gsap.fromTo(
+        demoButton,
+        { opacity: 0, scale: 0.9, rotation: -5 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotation: 0,
+          duration: 0.8,
+          ease: "back.out(1.5)",
+          delay: 0.5,
+          scrollTrigger: {
+            trigger: textContainer,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      const demoHoverTl = gsap.timeline({ paused: true });
+      demoHoverTl
+        .to(demoButton, {
+          scale: 1.03,
+          rotation: 2,
+          boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 255, 255, 0.5)",
+          backgroundColor: "#e2e8f0",
+          duration: 0.3,
+          ease: "power2.out",
+        })
+        .to(
+          demoButton.querySelector(".h-4"),
+          {
+            x: 4,
+            duration: 0.3,
+            ease: "power2.out",
+          },
+          0
+        );
+
+      demoButton.addEventListener("mouseenter", () => demoHoverTl.play());
+      demoButton.addEventListener("mouseleave", () => demoHoverTl.reverse());
+
+      gsap.fromTo(
+        reviewButton,
+        { opacity: 0, scale: 0.9, x: -20 },
+        {
+          opacity: 1,
+          scale: 1,
+          x: 0,
+          duration: 0.8,
+          ease: "elastic.out(1, 0.5)",
+          delay: 0.7,
+          scrollTrigger: {
+            trigger: imageContainer,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      const reviewHoverTl = gsap.timeline({ paused: true });
+      reviewHoverTl
+        .to(reviewButton, {
+          scale: 1.1,
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 255, 255, 0.6)",
+          duration: 0.3,
+          ease: "power2.out",
+        })
+        .to(reviewButton, {
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 255, 255, 0.8)",
+          duration: 0.4,
+          repeat: 1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+      reviewButton.addEventListener("mouseenter", () => reviewHoverTl.play());
+      reviewButton.addEventListener("mouseleave", () => reviewHoverTl.reverse());
+
+      return () => {
+        headingSplit.revert();
+        paragraphSplit.revert();
+      };
+    });
+
+    return () => {
+      mm.revert();
+    };
+  }, []);
+
   return (
-    <section className="w-full bg-secondary py-20 flex justify-center px-6">
+    <section ref={sectionRef} className="w-full bg-secondary py-20 flex justify-center px-6">
       <div className="w-full max-w-[1200px] grid md:grid-cols-2 gap-12 items-center">
-        <div className="flex flex-col items-start justify-center gap-6">
+        <div ref={textContainerRef} className="flex flex-col items-start justify-center gap-6">
           <h3 className="text-[32px] font-semibold leading-tight text-foreground">
             Your new system of action
           </h3>
@@ -15,6 +218,7 @@ const SystemOfAction = () => {
             Act on customers as you analyze them.
           </p>
           <a
+            ref={demoButtonRef}
             href="#"
             className="group inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background py-3 px-6 text-base font-medium text-foreground transition-transform duration-200 ease-in-out hover:scale-95"
           >
@@ -23,9 +227,10 @@ const SystemOfAction = () => {
           </a>
         </div>
 
-        <div className="relative">
+        <div ref={imageContainerRef} className="relative">
           <div>
             <Image
+              ref={mainImageRef}
               src="https://framerusercontent.com/images/mNI4b5v85O4Y911MZXHdC1fcTN4.png"
               alt="Three layered card view of different Planhat workspaces: Customer Success, Sales and Support."
               width={1240}
@@ -36,6 +241,7 @@ const SystemOfAction = () => {
           
           <div className="-mt-40">
             <Image
+              ref={secondaryImageRef}
               src="https://framerusercontent.com/images/zg2FCiBZ2ya8VsJfSD7OnCr7wrw.png"
               alt="An abstract render of a Planhat customer profile, including timeseries data and interaction records from Jira and Salesforce."
               width={572}
@@ -45,6 +251,7 @@ const SystemOfAction = () => {
           </div>
 
           <a
+            ref={reviewButtonRef}
             href="https://www.g2.com/products/planhat/reviews"
             target="_blank"
             rel="noopener noreferrer"

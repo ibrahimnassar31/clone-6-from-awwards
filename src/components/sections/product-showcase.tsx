@@ -28,7 +28,14 @@ const featureData = [
   },
 ];
 
-const FeatureItem = ({ title, description, isActive, progress }) => (
+interface FeatureItemProps {
+  title: string;
+  description: string;
+  isActive: boolean;
+  progress: number;
+}
+
+const FeatureItem = ({ title, description, isActive, progress }: FeatureItemProps) => (
   <div className="relative pl-6">
     <a href={`#${title.toLowerCase()}`} className={`block transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-40'}`}>
       <h5 className="text-2xl font-medium text-text-black">{title}</h5>
@@ -45,7 +52,7 @@ export default function ProductShowcase() {
   const [activeSection, setActiveSection] = useState(0);
   const [progress, setProgress] = useState([0, 0, 0]);
 
-  const triggerRefs = [useRef(null), useRef(null), useRef(null)];
+  const triggerRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
   
   useEffect(() => {
     const observer = new IntersectionObserver(
